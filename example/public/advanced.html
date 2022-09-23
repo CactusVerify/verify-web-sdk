@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+  <script>
+
+    // This is every option to customize your verification process.
+    // if some of these options are not set, default values will be used.
+    // which is set from admin panel.
+    //
+    // livenessType: 0 || 1,
+    // successCallbackUrl: 'successCallbackUrl',
+    // errorCallbackUrl: 'errorCallbackUrl',
+    // lang: 'ge' || 'en' || 'ru' || 'sp',
+    // documentCaptureType: 1 || 2 || 3 || 4,
+    // isIdCardSelected: true || false,
+    // isPassportSelected: true || false,
+    // isResidenceCardSelected: true || false,
+    // isDriverLicenseSelected: true || false,
+    // sessionFlow: 0 || 1,
+    // isFirstPageShown: true || false,
+    // maxSessionLength: 'max length is not limited',
+    // popup: 0 || 1,
+
+    /**
+     * Liveness step only. document will be skipped
+     */
+    let options = {
+      livenessType: 0,         //  0 - 3D , 1 - 2D
+      documentCaptureType: 3   // 0-Capture; 1-Upload; 2-Both; 3-Skip Document Step
+    }
+
+    /**
+     * Session where document options will be ID and PASSPORT.
+     */
+    options = {
+      isIdCardSelected: true,
+      isPassportSelected: true,
+      isResidenceCardSelected: false,
+      isDriverLicenseSelected: false,
+    }
+
+    /**
+     * Session with 3D liveness type.
+     */
+    options = {
+      livenessType: 0,  //  0 - 3D , 1 - 2D
+    }
+
+    /**
+     * Session with 2D liveness type.
+     */
+    options = {
+      livenessType: 1,
+    }
+
+    /**
+     * Session with 2D liveness type and Liveness First session direction
+     */
+    options = {
+      livenessType: 1,
+      sessionFlow: 0  // 0 - Liveness First, 1 - Document First
+    }
+
+    /**
+     * Session with 2D liveness type and document First session direction
+     */
+    options = {
+      livenessType: 1,
+      sessionFlow: 1,
+    }
+
+    /*
+       Session with custom callbacks.
+       Redirects user to success callback url if session finishes successfully
+       Redirects user to error callback url if session fails.
+    */
+    options = {
+      successCallbackUrl: '<>',
+      errorCallbackUrl: '<>'
+    }
+
+    /*
+      Session with custom language.
+      Available language inputs en | ge | ru | sp
+    */
+    options = {
+      lang: 'en'
+    }
+
+    /*
+      Hides first page
+    */
+    options = {
+      isFirstPageShown: false
+    }
+
+    /*
+      Optional data fields can be passed as extra. That will show up in admin panel
+      All the keys in extra object needs to be listed in extra section.
+      see admin panel => configuration -> session -> extra fields.
+      For security if different extra field is provided it wont be saved.
+    */
+    const extra = {
+      phoneNumber: '130000',
+      personalNumber: '13000000'
+    }
+
+    const generateVerification = async () => {
+      const { data } = await axios({
+        url: 'https://api.cactusverify.com/verification/generate',
+        method: 'POST',
+        data: {
+          appId: 'O4ux3V66iFRVwOSQey_',
+          options,
+        },
+        // This request to be successful please add your domain in admin panel(localhost will be detected automatically).
+      })
+
+
+
+      const iframe = document.createElement("iframe");
+      iframe.setAttribute("id", "cactusVerifyiFrame");
+      iframe.setAttribute("src", `${data.url}`);
+      iframe.setAttribute("style", "width: 100vw; height: 100vh");
+      iframe.setAttribute("allow", "camera");
+      iframe.setAttribute("allowfullscreen", true);
+      iframe.setAttribute("scrolling", "yes");
+
+      const container = document.querySelector("#cactusVerify-iframe-container");
+      container.appendChild(iframe);
+    };
+
+
+    generateVerification();
+  </script>
+</head>
+
+<body>
+  <!-- ხდება ფრეიმით ჩატვირთვა აპლიკაციის -->
+  <div id="cactusVerify-iframe-container"></div>
+
+</body>
+
+<script>
+  function handleMessage() {
+    console.log("Event", event.data['task'])
+    // Scrol top event sample
+    if (event.data['task'] == 'scroll_top') {
+      window.scrollTo(0, 0);
+    }
+  }
+  window.addEventListener("message", handleMessage, false);
+</script>
+
+</html>
