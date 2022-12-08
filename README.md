@@ -1,10 +1,5 @@
 
-<p align="left">
-  <a href="http://cactusverify.com/" target="blank"><img src="https://www.dropbox.com/s/kkdxbd5mjelvpkb/Logo_Text_100x24.png?raw=1" alt="CactusVerify logo" /></a>
-</p>
-
-
-## CactusVerify web SDK & web iFrame solution
+# CactusVerify web SDK & web iFrame solution
 
 Seamless customer on-boarding through facial authentication
 
